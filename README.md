@@ -40,7 +40,7 @@ Add the DB functions to _serverless.yml_ in the same way as in the second part.
 
 1- Clone the project. `git clone https://github.com/TasneemZh/Local-Serverless-with-DynamoDB.git`
 
-2- Install the NPM dependencies `npm i` and devDependencies `npm i --dev`
+2- Install the NPM devDependencies `npm i -also=dev` and dependencies `npm i`
 
 3- Install serverless globally by NPM (ONLY ONCE) `npm i -g serverless`, or locally, if that is not possible.
 
