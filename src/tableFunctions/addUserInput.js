@@ -1,4 +1,3 @@
-/* eslint linebreak-style: ["error", "windows"] */
 const AWS = require('aws-sdk');
 
 AWS.config.update({
@@ -12,9 +11,9 @@ const addUserInput = async (event) => {
   const dynamodb = new AWS.DynamoDB.DocumentClient();
 
   const newItem = {
-    'year': '', // The year number
-    'title': '', // The title of string type
-    'info': '' // An object of any info
+    year: '', // The year number
+    title: '', // The title of string type
+    info: '', // An object of any info
   };
 
   await dynamodb.put({

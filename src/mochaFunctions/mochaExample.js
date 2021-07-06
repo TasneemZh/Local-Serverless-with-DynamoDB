@@ -1,12 +1,12 @@
-'use strict'
-
-module.exports.mochaExample = async (event, context) => {
-  let bodyObj = JSON.parse(event.body)
-  console.log(bodyObj.parameter) // Should conosle.log the parameter inside the test function if everything is configured correctly
+module.exports.mochaExample = async (event) => {
+  const bodyObj = JSON.parse(event.body);
+  // Should conosle.log the parameter inside the test function if everything is configured correctly
+  console.log(bodyObj.parameter);
   return {
     statusCode: 200,
     body: JSON.stringify({
-      message: bodyObj.parameter // Nothing will appear through moch command and thus used console.log
-    })
-  }
-}
+      // Nothing will appear through moch command and thus used console.log
+      message: bodyObj.parameter,
+    }),
+  };
+};

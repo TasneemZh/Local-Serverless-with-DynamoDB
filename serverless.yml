@@ -1,6 +1,6 @@
 org: tasneemzh
-app: Local-Serverless-with-DynamoDB
-service: Local-Serverless-with-DynamoDB
+app: serverless-template
+service: serverless-template
 
 provider:
 # The following should stay as is unless specific customisations are required

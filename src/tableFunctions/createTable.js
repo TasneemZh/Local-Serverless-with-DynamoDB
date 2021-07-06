@@ -1,4 +1,3 @@
-/* eslint linebreak-style: ["error", "windows"] */
 const AWS = require('aws-sdk');
 
 AWS.config.update({
@@ -27,7 +26,7 @@ const createTable = async (event) => {
     },
   };
 
-  dynamodb.createTable(params, (err, data) => {
+  dynamodb.createTable(params, (err) => {
     if (err) {
       console.error('Error! Unable to create table...');
     } else {
