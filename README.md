@@ -90,9 +90,11 @@ The first plugin is for mocha, it is unnecessary if mocha won't be used, second 
 
 For a clean start:
 
-1- Remove the .git by `rm .git -recurse -force`.
+1- Delete the .git folder, and initialize a new one by `git init`.
 
 2- Delete mochaFunctions and test folders. Use `sls create function -f [your_Function_Name] --handler src/.../[your_Function_Name].[your_Function_Name]  --path src/.../` to create your owns.
+
+3- Delete the dynamoDB `sls dynamodb remove`, and create a new one `sls dynamodb install`.
 
 3- Use VS Code with “Prettier” and “Eslint” extensions to open and edit the project. (_Recommended_)
 
