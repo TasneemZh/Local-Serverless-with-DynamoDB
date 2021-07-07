@@ -7,6 +7,3 @@ jspm_packages
 
 # package history
 package-lock.json
-
-# Eslint Dependency
-.eslintrc.js
