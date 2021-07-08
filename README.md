@@ -96,7 +96,7 @@ For a clean start:
 
 3- Delete the dynamoDB `sls dynamodb remove`, and create a new one `sls dynamodb install`.
 
-3- Use VS Code with “Prettier” and “Eslint” extensions to open and edit the project. (_Recommended_)
+4- Use VS Code with “Prettier” and “Eslint” extensions to open and edit the project. (_Recommended_)
 
 -------------------------------------------------
 
