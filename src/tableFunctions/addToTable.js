@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-const fs = require('fs');
+const { readFileSync } = require('fs');
 const path = require('path');
 
 AWS.config.update({
@@ -14,7 +14,7 @@ const addToTable = async (event) => {
 
   console.log('Importing movies into DynamoDB. Please wait.');
 
-  const allMovies = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../data/moviedata.json')), 'utf8');
+  const allMovies = JSON.parse(readFileSync(path.resolve(__dirname, '../data/moviedata.json')), 'utf8');
   allMovies.forEach((movie) => {
     const params = {
       TableName: 'Movies',

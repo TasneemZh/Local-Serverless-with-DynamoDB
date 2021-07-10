@@ -9,5 +9,6 @@ module.exports = {
         message: 'Unexpected property on console object was called',
       },
     ],
+    'linebreak-style': 0,
   },
 };
