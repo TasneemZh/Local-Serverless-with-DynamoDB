@@ -1,8 +1,7 @@
-const AWS = require('aws-sdk');
-const { readFileSync } = require('fs');
-const path = require('path');
+import { config, DynamoDB } from 'aws-sdk';
+import { readFileSync } from 'fs';
 
-AWS.config.update({
+config.update({
   region: 'us-east-1',
   accessKeyId: '1234',
   secretAccessKey: '5678',
@@ -34,19 +33,21 @@ async function addToDB(allMovies, docClient) {
       movieTitles.push(movie.title);
     });
     resolve(movieTitles);
-  }); // The try/catch block will catch any Promis error, so no need for another catch here
-
+  }).catch((err) => {
+    errorMsg(err);
+  }); // Errors in promises tend to get swallowed if they are not catched
   return p;
 }
 
-const addToTable = async (event) => {
+// eslint-disable-next-line import/prefer-default-export
+export const handler = async (event) => {
   let docClient; let allMovies; let msg; let
     codeNum; let result;
 
   try {
     // Have the propability of not being created yet
-    docClient = new AWS.DynamoDB.DocumentClient();
-    allMovies = JSON.parse(readFileSync(path.resolve(__dirname, '../data/moviedata.json')), 'utf8');
+    docClient = new DynamoDB.DocumentClient();
+    allMovies = JSON.parse(readFileSync('./src/data/moviedata.json'), 'utf8');
     codeNum = 200;
     msg = 'New Movies have been added, and they have the following titles:-';
     result = await addToDB(allMovies, docClient);
@@ -66,8 +67,4 @@ const addToTable = async (event) => {
     null,
     2),
   });
-};
-
-module.exports = {
-  handler: addToTable,
 };

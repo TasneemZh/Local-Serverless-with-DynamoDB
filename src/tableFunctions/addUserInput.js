@@ -1,37 +1,48 @@
-const AWS = require('aws-sdk');
+import { config, DynamoDB } from 'aws-sdk';
 
-AWS.config.update({
+config.update({
   region: 'us-east-1',
   accessKeyId: '1234',
   secretAccessKey: '5678',
   endpoint: 'http://localhost:8000',
 });
 
-const addUserInput = async (event) => {
-  const dynamodb = new AWS.DynamoDB.DocumentClient();
+async function addInputToDB(docClient) {
+  return new Promise((resolve) => {
+    const params = {
+      TableName: 'Movies',
+      Item: {
+        year: '', // Movie year of production
+        title: '', // Movie name
+        info: '', // An object of any information
+      },
+    };
 
-  const newItem = {
-    year: '', // The year number
-    title: '', // The title of string type
-    info: '', // An object of any info
-  };
-
-  await dynamodb.put({
-    TableName: 'Movies',
-    Item: newItem,
+    // Add movie parameters to the table including the year, title, and info
+    docClient.put(params, (err) => {
+      if (err) {
+        throw err;
+      }
+    });
+    resolve(params);
   });
+}
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'addUserInput function has been executed...',
-      input: JSON.parse(event.body),
-    },
-    null,
-    2),
-  };
-};
+// eslint-disable-next-line import/prefer-default-export
+export const handler = async () => {
+  try {
+    const docClient = new DynamoDB.DocumentClient();
 
-module.exports = {
-  handler: addUserInput,
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: 'New movie based on your inputs has been added:-',
+        input: await addInputToDB(docClient),
+      },
+      null,
+      2),
+    };
+  } catch (err) {
+    throw new Error(`Well, errors can happen. ${err}`);
+  }
 };

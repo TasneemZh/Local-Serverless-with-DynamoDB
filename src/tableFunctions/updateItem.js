@@ -1,14 +1,15 @@
-const AWS = require('aws-sdk');
+import { config, DynamoDB } from 'aws-sdk';
 
-AWS.config.update({
+config.update({
   region: 'us-east-1',
   accessKeyId: '1234',
   secretAccessKey: '5678',
   endpoint: 'http://localhost:8000',
 });
 
-const updateItem = async (event) => {
-  const dynamodb = new AWS.DynamoDB.DocumentClient();
+// eslint-disable-next-line import/prefer-default-export
+export const handler = async (event) => {
+  const dynamodb = new DynamoDB.DocumentClient();
 
   const { year, title, info } = JSON.parse(event.body);
 
@@ -34,8 +35,4 @@ const updateItem = async (event) => {
     null,
     2),
   };
-};
-
-module.exports = {
-  handler: updateItem,
 };

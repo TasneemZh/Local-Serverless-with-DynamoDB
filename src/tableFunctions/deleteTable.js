@@ -1,14 +1,15 @@
-const AWS = require('aws-sdk');
+import { config, DynamoDB } from 'aws-sdk';
 
-AWS.config.update({
+config.update({
   region: 'us-east-1',
   accessKeyId: '1234',
   secretAccessKey: '5678',
   endpoint: 'http://localhost:8000',
 });
 
-const deleteTable = async () => {
-  const dynamodb = new AWS.DynamoDB();
+// eslint-disable-next-line import/prefer-default-export
+export const handler = async () => {
+  const dynamodb = new DynamoDB();
 
   const params = {
     TableName: 'Movies',
@@ -30,8 +31,4 @@ const deleteTable = async () => {
     null,
     2),
   };
-};
-
-module.exports = {
-  handler: deleteTable,
 };

@@ -1,14 +1,15 @@
-const AWS = require('aws-sdk');
+import { config, DynamoDB } from 'aws-sdk';
 
-AWS.config.update({
+config.update({
   region: 'us-east-1',
   accessKeyId: '1234',
   secretAccessKey: '5678',
   endpoint: 'http://localhost:8000',
 });
 
-const createTable = async (event) => {
-  const dynamodb = new AWS.DynamoDB();
+// eslint-disable-next-line import/prefer-default-export
+export const handler = async (event) => {
+  const dynamodb = new DynamoDB();
 
   const params = {
     TableName: 'Movies',
@@ -43,8 +44,4 @@ const createTable = async (event) => {
     null,
     2),
   };
-};
-
-module.exports = {
-  handler: createTable,
 };
