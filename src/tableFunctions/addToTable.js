@@ -9,9 +9,13 @@ AWS.config.update({
   endpoint: 'http://localhost:8000',
 });
 
+async function errorMsg(err) {
+  console.error(`Well, errors can happen. ${err}`);
+}
+
 async function addToDB(allMovies, docClient) {
   const movieTitles = [];
-  return new Promise((resolve) => {
+  const p = new Promise((resolve) => {
     allMovies.forEach((movie) => {
       const params = {
         TableName: 'Movies',
@@ -24,35 +28,44 @@ async function addToDB(allMovies, docClient) {
       // Add movie parameters to the table including the year, title, and info
       docClient.put(params, (err) => {
         if (err) {
-          throw err;
+          errorMsg(err);
         }
       });
       movieTitles.push(movie.title);
     });
     resolve(movieTitles);
-  }).catch((err) => {
-    throw new Error(`Well, errors can happen. ${err}`);
-  });
+  }); // The try/catch block will catch any Promis error, so no need for another catch here
+
+  return p;
 }
 
-const addToTable = async () => {
+const addToTable = async (event) => {
+  let docClient; let allMovies; let msg; let
+    codeNum; let result;
+
   try {
     // Have the propability of not being created yet
-    const docClient = new AWS.DynamoDB.DocumentClient();
-    const allMovies = JSON.parse(readFileSync(path.resolve(__dirname, '../data/moviedata.json')), 'utf8');
-
-    return ({
-      statusCode: 200,
-      body: JSON.stringify({
-        message: 'New Movies have been added, and they have the following titles:-',
-        input: await addToDB(allMovies, docClient),
-      },
-      null,
-      2),
-    });
+    docClient = new AWS.DynamoDB.DocumentClient();
+    allMovies = JSON.parse(readFileSync(path.resolve(__dirname, '../data/moviedata.json')), 'utf8');
+    codeNum = 200;
+    msg = 'New Movies have been added, and they have the following titles:-';
+    result = await addToDB(allMovies, docClient);
   } catch (err) {
-    throw new Error(`Well, errors can happen. ${err}`);
+    errorMsg(err);
+    codeNum = 400;
+    msg = 'Movies couldn\'t be added to the database for some reason...';
+    result = event;
   }
+
+  return ({
+    statusCode: codeNum,
+    body: JSON.stringify({
+      message: msg,
+      input: await result,
+    },
+    null,
+    2),
+  });
 };
 
 module.exports = {
