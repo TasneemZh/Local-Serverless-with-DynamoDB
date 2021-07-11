@@ -9,40 +9,50 @@ AWS.config.update({
   endpoint: 'http://localhost:8000',
 });
 
-const addToTable = async (event) => {
-  const docClient = new AWS.DynamoDB.DocumentClient();
-
-  console.log('Importing movies into DynamoDB. Please wait.');
-
-  const allMovies = JSON.parse(readFileSync(path.resolve(__dirname, '../data/moviedata.json')), 'utf8');
-  allMovies.forEach((movie) => {
-    const params = {
-      TableName: 'Movies',
-      Item: {
-        year: movie.year, // The year number
-        title: movie.title, // The title of string type
-        info: movie.info, // An object of any info
-      },
-    };
-
-    docClient.put(params, (err) => {
-      if (err) {
-        console.error('Unable to add movie ', movie.title, '. Error JSON:', JSON.stringify(err, null, 2));
-      } else {
-        console.log('PutItem succeeded: ', movie.title);
-      }
+async function addToDB(allMovies, docClient) {
+  const movieTitles = [];
+  return new Promise((resolve) => {
+    allMovies.forEach((movie) => {
+      const params = {
+        TableName: 'Movies',
+        Item: {
+          year: movie.year, // Movie year of production
+          title: movie.title, // Movie name
+          info: movie.info, // An object of any information
+        },
+      };
+      // Add movie parameters to the table including the year, title, and info
+      docClient.put(params, (err) => {
+        if (err) {
+          throw err;
+        }
+      });
+      movieTitles.push(movie.title);
     });
+    resolve(movieTitles);
+  }).catch((err) => {
+    throw new Error(`Well, errors can happen. ${err}`);
   });
+}
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'addToTable function has been executed...',
-      input: event,
-    },
-    null,
-    2),
-  };
+const addToTable = async () => {
+  try {
+    // Have the propability of not being created yet
+    const docClient = new AWS.DynamoDB.DocumentClient();
+    const allMovies = JSON.parse(readFileSync(path.resolve(__dirname, '../data/moviedata.json')), 'utf8');
+
+    return ({
+      statusCode: 200,
+      body: JSON.stringify({
+        message: 'New Movies have been added, and they have the following titles:-',
+        input: await addToDB(allMovies, docClient),
+      },
+      null,
+      2),
+    });
+  } catch (err) {
+    throw new Error(`Well, errors can happen. ${err}`);
+  }
 };
 
 module.exports = {
