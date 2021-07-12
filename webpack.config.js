@@ -25,11 +25,7 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         include: __dirname,
-<<<<<<< HEAD
-        exclude: [/src\/mochaFunctions/, /node_modules/],
-=======
         exclude: /node_modules/,
->>>>>>> promises
       },
     ],
   },
