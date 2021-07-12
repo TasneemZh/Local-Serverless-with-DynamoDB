@@ -29,7 +29,7 @@ async function addInputToDB(docClient) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export const handler = async () => {
+export const addUserInput = async () => {
   try {
     const docClient = new DynamoDB.DocumentClient();
 

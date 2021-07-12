@@ -8,7 +8,7 @@ config.update({
 });
 
 // eslint-disable-next-line import/prefer-default-export
-export const handler = async (event) => {
+export const updateItem = async (event) => {
   const dynamodb = new DynamoDB.DocumentClient();
 
   const { year, title, info } = JSON.parse(event.body);

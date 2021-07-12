@@ -14,7 +14,7 @@ async function addToDB(allMovies, docClient) {
   const p = new Promise((resolve) => {
     allMovies.forEach((movie) => {
       const params = {
-        TableName: 'Moves',
+        TableName: 'Movies',
         Item: {
           year: movie.year, // Movie year of production
           title: movie.title, // Movie name
@@ -37,7 +37,7 @@ async function addToDB(allMovies, docClient) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export const handler = async (event) => {
+export const addFile = async (event) => {
   let docClient; let allMovies; let msg; let
     codeNum; let result;
 

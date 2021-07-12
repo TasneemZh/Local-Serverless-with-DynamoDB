@@ -28,7 +28,7 @@ functions:
         Action:
           - resource:action
         Resource: '*'
-    handler: src/helloWorld.handler
+    handler: src/helloWorld.helloWorld
     
   createTable:
     events:
@@ -42,7 +42,7 @@ functions:
         Action:
           - resource:action
         Resource: '*'
-    handler: src/tableFunctions/createTable.handler
+    handler: src/tableFunctions/createTable.createTable
 
   addFile:
     events:
@@ -56,7 +56,7 @@ functions:
         Action:
           - resource:action
         Resource: '*'
-    handler: src/tableFunctions/addFile.handler
+    handler: src/tableFunctions/addFile.addFile
     
   addUserInput:
     events:
@@ -70,7 +70,7 @@ functions:
         Action:
           - resource:action
         Resource: '*'
-    handler: src/tableFunctions/addUserInput.handler
+    handler: src/tableFunctions/addUserInput.addUserInput
 
   updateItem:
     events:
@@ -84,7 +84,7 @@ functions:
         Action:
           - resource:action
         Resource: '*'
-    handler: src/tableFunctions/updateItem.handler
+    handler: src/tableFunctions/updateItem.updateItem
 
   deleteTable:
     events:
@@ -98,17 +98,17 @@ functions:
         Action:
           - resource:action
         Resource: '*'
-    handler: src/tableFunctions/deleteTable.handler
+    handler: src/tableFunctions/deleteTable.deleteTable
     
-    errorMsg:
-      tags:
-        infrastructure_tier: Lambda
-      iamRoleStatements:
-        - Effect: Allow
-          Action:
-            - resource:action
-          Resource: '*'
-      handler: src/components/errorMsg.errorMsg
+  errorMsg:
+    tags:
+      infrastructure_tier: Lambda
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - resource:action
+        Resource: '*'
+    handler: src/components/errorMsg.errorMsg
     
 
 package:
