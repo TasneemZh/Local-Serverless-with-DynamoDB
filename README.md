@@ -1,6 +1,6 @@
 # About the Project
 
-A serverless offline project that runs locally on the user's browser. It costs nothing and doesn't need any registeration. It also has a local DynamoDB which can be interacted with through a shell as long as the server is running on the background. All the functions are written in Node.js and formatted modernly with ES6. The server is connected with the [Serverless App](https://app.serverless.com/) with the name "serverless-template". Thus, it needs Internet connection when operating since the word "offline" means that it isn't connected with a cloud service provider (e.g., AWS). In other words, it is FREE.
+A serverless offline project that runs locally on the user's browser. It costs nothing and doesn't need any registration. It also has a local DynamoDB which can be interacted with through a shell as long as the server is running in the background. All the functions are written in **Node.js** and formatted modernly with **ES6**. The server is connected with the [Serverless App](https://app.serverless.com/) with the name "serverless-template". Thus, it needs an Internet connection when operating since the word "offline" means that it isn't connected with a cloud service provider (e.g., AWS). In other words, it is FREE.
 
 -------------------------------------------------
 
