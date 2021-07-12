@@ -1,5 +1,6 @@
 import { config, DynamoDB } from 'aws-sdk';
 import { readFileSync } from 'fs';
+import errorMsg from '../components/errorMsg';
 
 config.update({
   region: 'us-east-1',
@@ -8,16 +9,12 @@ config.update({
   endpoint: 'http://localhost:8000',
 });
 
-async function errorMsg(err) {
-  console.error(`Well, errors can happen. ${err}`);
-}
-
 async function addToDB(allMovies, docClient) {
   const movieTitles = [];
   const p = new Promise((resolve) => {
     allMovies.forEach((movie) => {
       const params = {
-        TableName: 'Movies',
+        TableName: 'Moves',
         Item: {
           year: movie.year, // Movie year of production
           title: movie.title, // Movie name

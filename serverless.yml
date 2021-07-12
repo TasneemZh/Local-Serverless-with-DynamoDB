@@ -98,7 +98,22 @@ functions:
         Action:
           - resource:action
         Resource: '*'
-    handler: src/tableFunctions/deleteTable.handler     
+    handler: src/tableFunctions/deleteTable.handler
+    
+    errorMsg:
+      tags:
+        infrastructure_tier: Lambda
+      iamRoleStatements:
+        - Effect: Allow
+          Action:
+            - resource:action
+          Resource: '*'
+      handler: src/components/errorMsg.errorMsg
+    
+
+package:
+  individually: true
+  excludeDevDependencies: true
 
 plugins:
   - serverless-webpack
@@ -113,6 +128,7 @@ custom:
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true # enable auto-packing of external modules
+    packager: npm
   serverless-mocha-plugin:
     testTemplate: templates/testTemplate.ejs
     functionTemplate: templates/functionTemplate.ejs
