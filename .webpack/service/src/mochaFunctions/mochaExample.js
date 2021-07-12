@@ -136,4 +136,3 @@ module.exports = require("source-map-support/register");
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=mochaExample.js.map

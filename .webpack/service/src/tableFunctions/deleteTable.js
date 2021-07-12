@@ -98,7 +98,7 @@ var __webpack_exports__ = {};
   \*******************************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "handler": () => (/* binding */ handler)
+/* harmony export */   "deleteTable": () => (/* binding */ deleteTable)
 /* harmony export */ });
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! source-map-support/register */ "source-map-support/register");
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
@@ -113,7 +113,7 @@ aws_sdk__WEBPACK_IMPORTED_MODULE_1__.config.update({
   endpoint: 'http://localhost:8000'
 }); // eslint-disable-next-line import/prefer-default-export
 
-const handler = async () => {
+const deleteTable = async event => {
   const dynamodb = new aws_sdk__WEBPACK_IMPORTED_MODULE_1__.DynamoDB();
   const params = {
     TableName: 'Movies'
@@ -128,7 +128,8 @@ const handler = async () => {
   return {
     statusCode: 200,
     body: JSON.stringify({
-      message: 'deleteTable function has been executed...'
+      message: 'deleteTable function has been executed...',
+      input: event
     }, null, 2)
   };
 };
@@ -139,4 +140,3 @@ for(var i in __webpack_exports__) __webpack_export_target__[i] = __webpack_expor
 if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, "__esModule", { value: true });
 /******/ })()
 ;
-//# sourceMappingURL=deleteTable.js.map

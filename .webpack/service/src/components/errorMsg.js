@@ -2,16 +2,6 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "aws-sdk":
-/*!**************************!*\
-  !*** external "aws-sdk" ***!
-  \**************************/
-/***/ ((module) => {
-
-module.exports = require("aws-sdk");
-
-/***/ }),
-
 /***/ "source-map-support/register":
 /*!**********************************************!*\
   !*** external "source-map-support/register" ***!
@@ -93,68 +83,22 @@ module.exports = require("source-map-support/register");
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-/*!*******************************************!*\
-  !*** ./src/tableFunctions/createTable.js ***!
-  \*******************************************/
+/*!************************************!*\
+  !*** ./src/components/errorMsg.js ***!
+  \************************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "createTable": () => (/* binding */ createTable)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! source-map-support/register */ "source-map-support/register");
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! aws-sdk */ "aws-sdk");
-/* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(aws_sdk__WEBPACK_IMPORTED_MODULE_1__);
 
 
-aws_sdk__WEBPACK_IMPORTED_MODULE_1__.config.update({
-  region: 'us-east-1',
-  accessKeyId: '1234',
-  secretAccessKey: '5678',
-  endpoint: 'http://localhost:8000'
-}); // eslint-disable-next-line import/prefer-default-export
-
-const createTable = async event => {
-  const dynamodb = new aws_sdk__WEBPACK_IMPORTED_MODULE_1__.DynamoDB();
-  const params = {
-    TableName: 'Movies',
-    KeySchema: [{
-      AttributeName: 'year',
-      KeyType: 'HASH'
-    }, // Partition key
-    {
-      AttributeName: 'title',
-      KeyType: 'RANGE'
-    } // Sort key
-    ],
-    AttributeDefinitions: [{
-      AttributeName: 'year',
-      AttributeType: 'N'
-    }, {
-      AttributeName: 'title',
-      AttributeType: 'S'
-    }],
-    ProvisionedThroughput: {
-      ReadCapacityUnits: 10,
-      // Number of accesses for reading per second
-      WriteCapacityUnits: 10 // Number of accesses for writing per second
-
-    }
-  };
-  dynamodb.createTable(params, err => {
-    if (err) {
-      console.error('Error! Unable to create table...');
-    } else {
-      console.log('Created table successfully!');
-    }
-  });
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'createTable function has been executed...',
-      input: event
-    }, null, 2)
-  };
+const errorMsg = async err => {
+  console.error(`Well, errors can happen. ${err}`);
 };
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (errorMsg);
 })();
 
 var __webpack_export_target__ = exports;

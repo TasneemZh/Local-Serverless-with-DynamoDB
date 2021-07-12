@@ -98,7 +98,7 @@ var __webpack_exports__ = {};
   \******************************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "handler": () => (/* binding */ handler)
+/* harmony export */   "updateItem": () => (/* binding */ updateItem)
 /* harmony export */ });
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! source-map-support/register */ "source-map-support/register");
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
@@ -113,7 +113,7 @@ aws_sdk__WEBPACK_IMPORTED_MODULE_1__.config.update({
   endpoint: 'http://localhost:8000'
 }); // eslint-disable-next-line import/prefer-default-export
 
-const handler = async event => {
+const updateItem = async event => {
   const dynamodb = new aws_sdk__WEBPACK_IMPORTED_MODULE_1__.DynamoDB.DocumentClient();
   const {
     year,
@@ -147,4 +147,3 @@ for(var i in __webpack_exports__) __webpack_export_target__[i] = __webpack_expor
 if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, "__esModule", { value: true });
 /******/ })()
 ;
-//# sourceMappingURL=updateItem.js.map

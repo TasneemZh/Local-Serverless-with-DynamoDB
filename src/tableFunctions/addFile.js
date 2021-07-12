@@ -1,5 +1,6 @@
 import { config, DynamoDB } from 'aws-sdk';
 import { readFileSync } from 'fs';
+import errorMsg from '../components/errorMsg';
 
 config.update({
   region: 'us-east-1',
@@ -7,10 +8,6 @@ config.update({
   secretAccessKey: '5678',
   endpoint: 'http://localhost:8000',
 });
-
-async function errorMsg(err) {
-  console.error(`Well, errors can happen. ${err}`);
-}
 
 async function addToDB(allMovies, docClient) {
   const movieTitles = [];
@@ -40,7 +37,7 @@ async function addToDB(allMovies, docClient) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export const handler = async (event) => {
+export const addFile = async (event) => {
   let docClient; let allMovies; let msg; let
     codeNum; let result;
 

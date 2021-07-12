@@ -8,7 +8,7 @@ config.update({
 });
 
 // eslint-disable-next-line import/prefer-default-export
-export const handler = async () => {
+export const deleteTable = async (event) => {
   const dynamodb = new DynamoDB();
 
   const params = {
@@ -27,6 +27,7 @@ export const handler = async () => {
     statusCode: 200,
     body: JSON.stringify({
       message: 'deleteTable function has been executed...',
+      input: event,
     },
     null,
     2),

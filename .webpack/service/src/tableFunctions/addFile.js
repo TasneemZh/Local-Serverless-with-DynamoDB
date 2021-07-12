@@ -2,6 +2,28 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/components/errorMsg.js":
+/*!************************************!*\
+  !*** ./src/components/errorMsg.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! source-map-support/register */ "source-map-support/register");
+/* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
+
+
+const errorMsg = async err => {
+  console.error(`Well, errors can happen. ${err}`);
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (errorMsg);
+
+/***/ }),
+
 /***/ "aws-sdk":
 /*!**************************!*\
   !*** external "aws-sdk" ***!
@@ -108,7 +130,7 @@ var __webpack_exports__ = {};
   \***************************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "handler": () => (/* binding */ handler)
+/* harmony export */   "addFile": () => (/* binding */ addFile)
 /* harmony export */ });
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! source-map-support/register */ "source-map-support/register");
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
@@ -116,6 +138,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(aws_sdk__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! fs */ "fs");
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(fs__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _components_errorMsg__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/errorMsg */ "./src/components/errorMsg.js");
+
 
 
 
@@ -125,10 +149,6 @@ aws_sdk__WEBPACK_IMPORTED_MODULE_1__.config.update({
   secretAccessKey: '5678',
   endpoint: 'http://localhost:8000'
 });
-
-async function errorMsg(err) {
-  console.error(`Well, errors can happen. ${err}`);
-}
 
 async function addToDB(allMovies, docClient) {
   const movieTitles = [];
@@ -148,21 +168,21 @@ async function addToDB(allMovies, docClient) {
 
       docClient.put(params, err => {
         if (err) {
-          errorMsg(err);
+          (0,_components_errorMsg__WEBPACK_IMPORTED_MODULE_3__.default)(err);
         }
       });
       movieTitles.push(movie.title);
     });
     resolve(movieTitles);
   }).catch(err => {
-    errorMsg(err);
+    (0,_components_errorMsg__WEBPACK_IMPORTED_MODULE_3__.default)(err);
   }); // Errors in promises tend to get swallowed if they are not catched
 
   return p;
 } // eslint-disable-next-line import/prefer-default-export
 
 
-const handler = async event => {
+const addFile = async event => {
   let docClient;
   let allMovies;
   let msg;
@@ -177,7 +197,7 @@ const handler = async event => {
     msg = 'New Movies have been added, and they have the following titles:-';
     result = await addToDB(allMovies, docClient);
   } catch (err) {
-    errorMsg(err);
+    (0,_components_errorMsg__WEBPACK_IMPORTED_MODULE_3__.default)(err);
     codeNum = 400;
     msg = 'Movies couldn\'t be added to the database for some reason...';
     result = event;
@@ -198,4 +218,3 @@ for(var i in __webpack_exports__) __webpack_export_target__[i] = __webpack_expor
 if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, "__esModule", { value: true });
 /******/ })()
 ;
-//# sourceMappingURL=addFile.js.map

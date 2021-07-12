@@ -8,7 +8,7 @@ config.update({
 });
 
 // eslint-disable-next-line import/prefer-default-export
-export const handler = async (event) => {
+export const createTable = async (event) => {
   const dynamodb = new DynamoDB();
 
   const params = {
