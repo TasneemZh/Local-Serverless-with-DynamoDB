@@ -66,17 +66,17 @@ Add the DB functions to _serverless.yml_ in the same way as in the second part.
 
 * The plugins in _serverless.yml_ are added based on the usages of the projects.
 
-plugins:
+    plugins:
 
-    ...
+    ...
 
-  - serverless-mocha-plugin
+    - serverless-mocha-plugin
 
-  - serverless-dynamodb-local
+    - serverless-dynamodb-local
 
-  - serverless-offline
+    - serverless-offline
 
-The first plugin is for mocha, it is unnecessary if mocha won't be used, second one is also optional if the DB won't be used, and third one is essential for the project to run locally.
+    The first plugin is for mocha, it is unnecessary if mocha won't be used, second one is also optional if the DB won't be used, and third one is essential for the project to run locally.
 
 * Authentication in serverless with aws is a crucial part of the project as it won't get executed without it. Notice the plugin "serverless-iam-roles-per-function" in _serverless.yml_, the "iamRoleStatements" sections for the functions in the _serverless.yml_, and the npm package "serverless-iam-roles-per-function" in _package.json_.
 

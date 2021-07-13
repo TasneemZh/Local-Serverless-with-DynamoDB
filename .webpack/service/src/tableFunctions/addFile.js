@@ -146,16 +146,19 @@ async function addFileToDB(docClient, allMovies) {
     }); // Add movie parameters to the table including the year, title, and info
 
     const promise = new Promise((resolve, reject) => {
-      for (let i = 0; i < params.length; i += 1) {
-        docClient.put(params[i], err => {
-          if (err) {
-            reject(err);
-          }
-        });
+      for (let i = 0; i < params.length - 1; i += 1) {
+        docClient.put(params[i]);
         movieTitles.push(params[i].Item.title);
       }
 
-      resolve(movieTitles);
+      docClient.put(params[params.length - 1], err => {
+        if (err) {
+          reject(err);
+        } else {
+          movieTitles.push(params[params.length - 1].Item.title);
+          resolve(movieTitles);
+        }
+      });
     });
     promise.catch(() => {}); // To swallow all errors
 
