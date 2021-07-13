@@ -2,6 +2,28 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/components/errorMsg.js":
+/*!************************************!*\
+  !*** ./src/components/errorMsg.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! source-map-support/register */ "source-map-support/register");
+/* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
+
+
+const errorMsg = async err => {
+  console.error(`Well, errors can happen. ${err}`);
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (errorMsg);
+
+/***/ }),
+
 /***/ "aws-sdk":
 /*!**************************!*\
   !*** external "aws-sdk" ***!
@@ -104,56 +126,81 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! aws-sdk */ "aws-sdk");
 /* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(aws_sdk__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _components_errorMsg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/errorMsg */ "./src/components/errorMsg.js");
 
+
+
+/* Lambda functions need aws permissions in order to use the database.
+   It was proven that it is enough to give the permissions (by
+   connecting Lambda functions to a valid security token) for creating the
+   table only, and all the operations on it would be authenticated */
 
 aws_sdk__WEBPACK_IMPORTED_MODULE_1__.config.update({
   region: 'us-east-1',
   accessKeyId: '1234',
   secretAccessKey: '5678',
   endpoint: 'http://localhost:8000'
-}); // eslint-disable-next-line import/prefer-default-export
+});
 
-const createTable = async event => {
-  const dynamodb = new aws_sdk__WEBPACK_IMPORTED_MODULE_1__.DynamoDB();
-  const params = {
-    TableName: 'Movies',
-    KeySchema: [{
-      AttributeName: 'year',
-      KeyType: 'HASH'
-    }, // Partition key
-    {
-      AttributeName: 'title',
-      KeyType: 'RANGE'
-    } // Sort key
-    ],
-    AttributeDefinitions: [{
-      AttributeName: 'year',
-      AttributeType: 'N'
-    }, {
-      AttributeName: 'title',
-      AttributeType: 'S'
-    }],
-    ProvisionedThroughput: {
-      ReadCapacityUnits: 10,
-      // Number of accesses for reading per second
-      WriteCapacityUnits: 10 // Number of accesses for writing per second
+async function createTableInDB(dynamoDB) {
+  return new Promise(resolve => {
+    const params = {
+      TableName: 'Movies',
+      KeySchema: [{
+        AttributeName: 'year',
+        KeyType: 'HASH'
+      }, // Partition key
+      {
+        AttributeName: 'title',
+        KeyType: 'RANGE'
+      } // Sort key
+      ],
+      AttributeDefinitions: [{
+        AttributeName: 'year',
+        AttributeType: 'N'
+      }, // Integer (Number) type
+      {
+        AttributeName: 'title',
+        AttributeType: 'S'
+      } // String type
+      ],
+      ProvisionedThroughput: {
+        ReadCapacityUnits: 10,
+        // Number of accesses for reading per second
+        WriteCapacityUnits: 10 // Number of accesses for writing per second
 
-    }
-  };
-  dynamodb.createTable(params, err => {
-    if (err) {
-      console.error('Error! Unable to create table...');
-    } else {
-      console.log('Created table successfully!');
-    }
+      }
+    };
+    dynamoDB.createTable(params, err => {
+      if (err) {
+        (0,_components_errorMsg__WEBPACK_IMPORTED_MODULE_2__.default)(err);
+      }
+    });
+    resolve(params);
   });
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'createTable function has been executed...',
-      input: event
-    }, null, 2)
-  };
+} // eslint-disable-next-line import/prefer-default-export
+
+
+const createTable = async () => {
+  try {
+    const dynamoDB = new aws_sdk__WEBPACK_IMPORTED_MODULE_1__.DynamoDB();
+    const result = await createTableInDB(dynamoDB);
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: 'Created table successfully with the following paramaters:-',
+        input: await result
+      }, null, 2)
+    };
+  } catch (err) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: 'Couldn\'t create table for the following reason:-',
+        input: err
+      }, null, 2)
+    };
+  }
 };
 })();
 

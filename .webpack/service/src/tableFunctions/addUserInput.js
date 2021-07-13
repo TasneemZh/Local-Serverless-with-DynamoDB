@@ -2,6 +2,28 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/components/errorMsg.js":
+/*!************************************!*\
+  !*** ./src/components/errorMsg.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! source-map-support/register */ "source-map-support/register");
+/* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
+
+
+const errorMsg = async err => {
+  console.error(`Well, errors can happen. ${err}`);
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (errorMsg);
+
+/***/ }),
+
 /***/ "aws-sdk":
 /*!**************************!*\
   !*** external "aws-sdk" ***!
@@ -104,32 +126,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! aws-sdk */ "aws-sdk");
 /* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(aws_sdk__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _components_errorMsg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/errorMsg */ "./src/components/errorMsg.js");
 
 
-aws_sdk__WEBPACK_IMPORTED_MODULE_1__.config.update({
-  region: 'us-east-1',
-  accessKeyId: '1234',
-  secretAccessKey: '5678',
-  endpoint: 'http://localhost:8000'
-});
 
-async function addInputToDB(docClient) {
+
+async function addInputToDB(event, docClient) {
   return new Promise(resolve => {
+    const body = JSON.parse(event.body);
     const params = {
       TableName: 'Movies',
       Item: {
-        year: '',
-        // Movie year of production
-        title: '',
-        // Movie name
-        info: '' // An object of any information
+        year: body.year,
+        // Movie year of production - of N type (Integer/Number)
+        title: body.title,
+        // Movie name - of S type (String)
+        info: body.info // An object of any information - of {} type (Object)
 
       }
     }; // Add movie parameters to the table including the year, title, and info
 
     docClient.put(params, err => {
       if (err) {
-        throw err;
+        (0,_components_errorMsg__WEBPACK_IMPORTED_MODULE_2__.default)(err);
       }
     });
     resolve(params);
@@ -137,18 +156,25 @@ async function addInputToDB(docClient) {
 } // eslint-disable-next-line import/prefer-default-export
 
 
-const addUserInput = async () => {
+const addUserInput = async event => {
   try {
     const docClient = new aws_sdk__WEBPACK_IMPORTED_MODULE_1__.DynamoDB.DocumentClient();
+    const result = await addInputToDB(event, docClient);
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: 'New movie based on your inputs has been added:-',
-        input: await addInputToDB(docClient)
+        message: 'A new movie based on your inputs has been added:-',
+        input: await result
       }, null, 2)
     };
   } catch (err) {
-    throw new Error(`Well, errors can happen. ${err}`);
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: 'The movie couldn\'t be added for the following reason:-',
+        input: err
+      }, null, 2)
+    };
   }
 };
 })();

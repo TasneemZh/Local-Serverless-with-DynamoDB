@@ -1,17 +1,10 @@
-import { config, DynamoDB } from 'aws-sdk';
+import { DynamoDB } from 'aws-sdk';
 import { readFileSync } from 'fs';
 import errorMsg from '../components/errorMsg';
 
-config.update({
-  region: 'us-east-1',
-  accessKeyId: '1234',
-  secretAccessKey: '5678',
-  endpoint: 'http://localhost:8000',
-});
-
-async function addToDB(allMovies, docClient) {
-  const movieTitles = [];
-  const p = new Promise((resolve) => {
+async function addFileToDB(docClient, allMovies) {
+  return new Promise((resolve) => {
+    const movieTitles = [];
     allMovies.forEach((movie) => {
       const params = {
         TableName: 'Movies',
@@ -30,38 +23,34 @@ async function addToDB(allMovies, docClient) {
       movieTitles.push(movie.title);
     });
     resolve(movieTitles);
-  }).catch((err) => {
-    errorMsg(err);
-  }); // Errors in promises tend to get swallowed if they are not catched
-  return p;
+  });
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export const addFile = async (event) => {
-  let docClient; let allMovies; let msg; let
-    codeNum; let result;
-
+export const addFile = async () => {
   try {
     // Have the propability of not being created yet
-    docClient = new DynamoDB.DocumentClient();
-    allMovies = JSON.parse(readFileSync('./src/data/moviedata.json'), 'utf8');
-    codeNum = 200;
-    msg = 'New Movies have been added, and they have the following titles:-';
-    result = await addToDB(allMovies, docClient);
+    const docClient = new DynamoDB.DocumentClient();
+    const allMovies = JSON.parse(readFileSync('./src/data/moviedata.json'), 'utf8');
+    const result = addFileToDB(docClient, allMovies);
+    return ({
+      statusCode: 200,
+      body: JSON.stringify({
+        message: 'New Movies have been added, and they have the following titles:-',
+        input: await result,
+      },
+      null,
+      2),
+    });
   } catch (err) {
-    errorMsg(err);
-    codeNum = 400;
-    msg = 'Movies couldn\'t be added to the database for some reason...';
-    result = event;
+    return ({
+      statusCode: 400,
+      body: JSON.stringify({
+        message: 'The movies couldn\'t be added for the following reason:-',
+        input: err,
+      },
+      null,
+      2),
+    });
   }
-
-  return ({
-    statusCode: codeNum,
-    body: JSON.stringify({
-      message: msg,
-      input: await result,
-    },
-    null,
-    2),
-  });
 };

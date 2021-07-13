@@ -1,27 +1,21 @@
-import { config, DynamoDB } from 'aws-sdk';
+import { DynamoDB } from 'aws-sdk';
+import errorMsg from '../components/errorMsg';
 
-config.update({
-  region: 'us-east-1',
-  accessKeyId: '1234',
-  secretAccessKey: '5678',
-  endpoint: 'http://localhost:8000',
-});
-
-async function addInputToDB(docClient) {
+async function addInputToDB(event, docClient) {
   return new Promise((resolve) => {
+    const body = JSON.parse(event.body);
     const params = {
       TableName: 'Movies',
       Item: {
-        year: '', // Movie year of production
-        title: '', // Movie name
-        info: '', // An object of any information
+        year: body.year, // Movie year of production - of N type (Integer/Number)
+        title: body.title, // Movie name - of S type (String)
+        info: body.info, // An object of any information - of {} type (Object)
       },
     };
-
     // Add movie parameters to the table including the year, title, and info
     docClient.put(params, (err) => {
       if (err) {
-        throw err;
+        errorMsg(err);
       }
     });
     resolve(params);
@@ -29,20 +23,28 @@ async function addInputToDB(docClient) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export const addUserInput = async () => {
+export const addUserInput = async (event) => {
   try {
     const docClient = new DynamoDB.DocumentClient();
-
-    return {
+    const result = await addInputToDB(event, docClient);
+    return ({
       statusCode: 200,
       body: JSON.stringify({
-        message: 'New movie based on your inputs has been added:-',
-        input: await addInputToDB(docClient),
+        message: 'A new movie based on your inputs has been added:-',
+        input: await result,
       },
       null,
       2),
-    };
+    });
   } catch (err) {
-    throw new Error(`Well, errors can happen. ${err}`);
+    return ({
+      statusCode: 400,
+      body: JSON.stringify({
+        message: 'The movie couldn\'t be added for the following reason:-',
+        input: err,
+      },
+      null,
+      2),
+    });
   }
 };
