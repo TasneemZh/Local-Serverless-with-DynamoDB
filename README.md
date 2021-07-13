@@ -66,9 +66,9 @@ Add the DB functions to _serverless.yml_ in the same way as in the second part.
 
 * The plugins in _serverless.yml_ are added based on the usages of the project. As for the plugins below, the first one is for mocha, it is unnecessary if mocha won't be used, second one is also optional if the DB won't be used, and third one is essential for the project to run locally.
 
-    plugins:
+        plugins:
 
-    ...
+        ...
 
         - serverless-mocha-plugin
 
