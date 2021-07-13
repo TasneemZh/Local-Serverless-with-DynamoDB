@@ -1,8 +1,15 @@
-import { DynamoDB } from 'aws-sdk';
-import errorMsg from '../components/errorMsg';
+import { config, DynamoDB } from 'aws-sdk';
+
+// Lambda functions need aws permissions in order to use the database.
+config.update({
+  region: 'us-east-1',
+  accessKeyId: '1234',
+  secretAccessKey: '5678',
+  endpoint: 'http://localhost:8000',
+});
 
 async function addInputToDB(event, docClient) {
-  return new Promise((resolve) => {
+  return new Promise((res) => {
     const body = JSON.parse(event.body);
     const params = {
       TableName: 'Movies',
@@ -12,13 +19,20 @@ async function addInputToDB(event, docClient) {
         info: body.info, // An object of any information - of {} type (Object)
       },
     };
+
     // Add movie parameters to the table including the year, title, and info
-    docClient.put(params, (err) => {
-      if (err) {
-        errorMsg(err);
-      }
+    const promise = new Promise((resolve, reject) => {
+      docClient.put(params, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(params);
+        }
+      });
     });
-    resolve(params);
+
+    promise.catch(() => {}); // To swallow all errors
+    res(promise);
   });
 }
 
@@ -41,7 +55,7 @@ export const addUserInput = async (event) => {
       statusCode: 400,
       body: JSON.stringify({
         message: 'The movie couldn\'t be added for the following reason:-',
-        input: err,
+        input: err.message,
       },
       null,
       2),

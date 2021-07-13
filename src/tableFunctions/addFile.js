@@ -1,28 +1,44 @@
-import { DynamoDB } from 'aws-sdk';
+import { config, DynamoDB } from 'aws-sdk';
 import { readFileSync } from 'fs';
-import errorMsg from '../components/errorMsg';
+
+// Lambda functions need aws permissions in order to use the database.
+config.update({
+  region: 'us-east-1',
+  accessKeyId: '1234',
+  secretAccessKey: '5678',
+  endpoint: 'http://localhost:8000',
+});
 
 async function addFileToDB(docClient, allMovies) {
-  return new Promise((resolve) => {
+  return new Promise((res) => {
+    const params = [];
     const movieTitles = [];
     allMovies.forEach((movie) => {
-      const params = {
+      params.push({
         TableName: 'Movies',
         Item: {
           year: movie.year, // Movie year of production
           title: movie.title, // Movie name
           info: movie.info, // An object of any information
         },
-      };
-      // Add movie parameters to the table including the year, title, and info
-      docClient.put(params, (err) => {
-        if (err) {
-          errorMsg(err);
-        }
       });
-      movieTitles.push(movie.title);
     });
-    resolve(movieTitles);
+
+    // Add movie parameters to the table including the year, title, and info
+    const promise = new Promise((resolve, reject) => {
+      for (let i = 0; i < params.length; i += 1) {
+        docClient.put(params[i], (err) => {
+          if (err) {
+            reject(err);
+          }
+        });
+        movieTitles.push(params[i].Item.title);
+      }
+      resolve(movieTitles);
+    });
+
+    promise.catch(() => {}); // To swallow all errors
+    res(promise); // promise.Item.title
   });
 }
 
@@ -47,7 +63,7 @@ export const addFile = async () => {
       statusCode: 400,
       body: JSON.stringify({
         message: 'The movies couldn\'t be added for the following reason:-',
-        input: err,
+        input: err.message,
       },
       null,
       2),

@@ -99,16 +99,6 @@ functions:
           - resource:action
         Resource: '*'
     handler: src/tableFunctions/deleteTable.deleteTable
-    
-  errorMsg:
-    tags:
-      infrastructure_tier: Lambda
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - resource:action
-        Resource: '*'
-    handler: src/components/errorMsg.errorMsg
 
 package:
   individually: true

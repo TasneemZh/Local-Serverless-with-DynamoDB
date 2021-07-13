@@ -1,10 +1,6 @@
 import { config, DynamoDB } from 'aws-sdk';
-import errorMsg from '../components/errorMsg';
 
-/* Lambda functions need aws permissions in order to use the database.
-   It was proven that it is enough to give the permissions (by
-   connecting Lambda functions to a valid security token) for creating the
-   table only, and all the operations on it would be authenticated */
+// Lambda functions need aws permissions in order to use the database.
 config.update({
   region: 'us-east-1',
   accessKeyId: '1234',
@@ -13,7 +9,7 @@ config.update({
 });
 
 async function createTableInDB(dynamoDB) {
-  return new Promise((resolve) => {
+  return new Promise((res) => {
     const params = {
       TableName: 'Movies',
       KeySchema: [
@@ -29,12 +25,19 @@ async function createTableInDB(dynamoDB) {
         WriteCapacityUnits: 10, // Number of accesses for writing per second
       },
     };
-    dynamoDB.createTable(params, (err) => {
-      if (err) {
-        errorMsg(err);
-      }
+
+    const promise = new Promise((resolve, reject) => {
+      dynamoDB.createTable(params, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(params);
+        }
+      });
     });
-    resolve(params);
+
+    promise.catch(() => {}); // To swallow all errors
+    res(promise);
   });
 }
 
@@ -57,7 +60,7 @@ export const createTable = async () => {
       statusCode: 400,
       body: JSON.stringify({
         message: 'Couldn\'t create table for the following reason:-',
-        input: err,
+        input: err.message,
       },
       null,
       2),

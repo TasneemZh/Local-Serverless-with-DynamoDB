@@ -2,28 +2,6 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/components/errorMsg.js":
-/*!************************************!*\
-  !*** ./src/components/errorMsg.js ***!
-  \************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! source-map-support/register */ "source-map-support/register");
-/* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
-
-
-const errorMsg = async err => {
-  console.error(`Well, errors can happen. ${err}`);
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (errorMsg);
-
-/***/ }),
-
 /***/ "aws-sdk":
 /*!**************************!*\
   !*** external "aws-sdk" ***!
@@ -126,23 +104,34 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! aws-sdk */ "aws-sdk");
 /* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(aws_sdk__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _components_errorMsg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/errorMsg */ "./src/components/errorMsg.js");
 
+ // Lambda functions need aws permissions in order to use the database.
 
-
+aws_sdk__WEBPACK_IMPORTED_MODULE_1__.config.update({
+  region: 'us-east-1',
+  accessKeyId: '1234',
+  secretAccessKey: '5678',
+  endpoint: 'http://localhost:8000'
+});
 
 async function deleteTableInDB() {
-  return new Promise(resolve => {
+  return new Promise(res => {
     const dynamodb = new aws_sdk__WEBPACK_IMPORTED_MODULE_1__.DynamoDB();
     const params = {
       TableName: 'Movies'
     };
-    dynamodb.deleteTable(params, err => {
-      if (err) {
-        (0,_components_errorMsg__WEBPACK_IMPORTED_MODULE_2__.default)(err);
-      }
+    const promise = new Promise((resolve, reject) => {
+      dynamodb.deleteTable(params, err => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(params);
+        }
+      });
     });
-    resolve(params);
+    promise.catch(() => {}); // To swallow all errors
+
+    res(promise);
   });
 } // eslint-disable-next-line import/prefer-default-export
 
@@ -162,7 +151,7 @@ const deleteTable = async () => {
       statusCode: 400,
       body: JSON.stringify({
         message: 'Couldn\'t delete the table for the following reason:-',
-        input: err
+        input: err.message
       }, null, 2)
     };
   }

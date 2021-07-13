@@ -2,28 +2,6 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/components/errorMsg.js":
-/*!************************************!*\
-  !*** ./src/components/errorMsg.js ***!
-  \************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! source-map-support/register */ "source-map-support/register");
-/* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
-
-
-const errorMsg = async err => {
-  console.error(`Well, errors can happen. ${err}`);
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (errorMsg);
-
-/***/ }),
-
 /***/ "aws-sdk":
 /*!**************************!*\
   !*** external "aws-sdk" ***!
@@ -138,17 +116,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(aws_sdk__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! fs */ "fs");
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(fs__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _components_errorMsg__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/errorMsg */ "./src/components/errorMsg.js");
 
 
+ // Lambda functions need aws permissions in order to use the database.
 
-
+aws_sdk__WEBPACK_IMPORTED_MODULE_1__.config.update({
+  region: 'us-east-1',
+  accessKeyId: '1234',
+  secretAccessKey: '5678',
+  endpoint: 'http://localhost:8000'
+});
 
 async function addFileToDB(docClient, allMovies) {
-  return new Promise(resolve => {
+  return new Promise(res => {
+    const params = [];
     const movieTitles = [];
     allMovies.forEach(movie => {
-      const params = {
+      params.push({
         TableName: 'Movies',
         Item: {
           year: movie.year,
@@ -158,16 +142,24 @@ async function addFileToDB(docClient, allMovies) {
           info: movie.info // An object of any information
 
         }
-      }; // Add movie parameters to the table including the year, title, and info
-
-      docClient.put(params, err => {
-        if (err) {
-          (0,_components_errorMsg__WEBPACK_IMPORTED_MODULE_3__.default)(err);
-        }
       });
-      movieTitles.push(movie.title);
+    }); // Add movie parameters to the table including the year, title, and info
+
+    const promise = new Promise((resolve, reject) => {
+      for (let i = 0; i < params.length; i += 1) {
+        docClient.put(params[i], err => {
+          if (err) {
+            reject(err);
+          }
+        });
+        movieTitles.push(params[i].Item.title);
+      }
+
+      resolve(movieTitles);
     });
-    resolve(movieTitles);
+    promise.catch(() => {}); // To swallow all errors
+
+    res(promise); // promise.Item.title
   });
 } // eslint-disable-next-line import/prefer-default-export
 
@@ -190,7 +182,7 @@ const addFile = async () => {
       statusCode: 400,
       body: JSON.stringify({
         message: 'The movies couldn\'t be added for the following reason:-',
-        input: err
+        input: err.message
       }, null, 2)
     };
   }

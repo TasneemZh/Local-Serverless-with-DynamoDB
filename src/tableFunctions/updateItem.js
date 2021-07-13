@@ -1,8 +1,15 @@
-import { DynamoDB } from 'aws-sdk';
-import errorMsg from '../components/errorMsg';
+import { config, DynamoDB } from 'aws-sdk';
+
+// Lambda functions need aws permissions in order to use the database.
+config.update({
+  region: 'us-east-1',
+  accessKeyId: '1234',
+  secretAccessKey: '5678',
+  endpoint: 'http://localhost:8000',
+});
 
 async function updateItemInDB(event, docClient) {
-  return new Promise((resolve) => {
+  return new Promise((res) => {
     const { year, title, info } = JSON.parse(event.body);
     const params = {
       TableName: 'Movies',
@@ -18,15 +25,19 @@ async function updateItemInDB(event, docClient) {
       },
       ReturnValues: 'UPDATED_NEW',
     };
-    // eslint-disable-next-line consistent-return
-    const dbResult = docClient.update(params, (err) => {
-      if (err) {
-        errorMsg(err);
-      }
+
+    const promise = new Promise((resolve, reject) => {
+      docClient.update(params, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(params);
+        }
+      });
     });
 
-    console.log(dbResult);
-    resolve(params);
+    promise.catch(() => {}); // To swallow all errors
+    res(promise);
   });
 }
 
@@ -38,18 +49,19 @@ export const updateItem = async (event) => {
     return ({
       statusCode: 200,
       body: JSON.stringify({
-        message: 'The movie with the selected keys has been updated as follow:-',
+        message: 'The movie with the selected keys has been updated as follows:-',
         input: await result,
       },
       null,
       2),
     });
   } catch (err) {
+    console.log(err);
     return ({
       statusCode: 400,
       body: JSON.stringify({
         message: 'The movie couldn\'t be updated for the following reason:-',
-        input: err,
+        input: err.message,
       },
       null,
       2),
