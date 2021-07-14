@@ -30,30 +30,3 @@ module.exports = {
     ],
   },
 };
-
-// exclude: [
-//   path.resolve(__dirname, 'src/mochaFunctions/'),
-// ],
-
-// exclude: [
-//   /src\/mochaFunctions/
-// ],
-
-// exclude: [
-//   './src/mochaFunctions/', // syntax error
-// ],
-
-// test: /.(js|json)?$/,
-// test: /\.(js|json)?$/,
-
-// module.exports = {
-// target: 'web',
-//   ...
-//   experiments: {
-//     outputModule: true,
-//   },
-//   output: {
-//     libraryTarget: 'module',
-//     ....
-//   },
-// };
