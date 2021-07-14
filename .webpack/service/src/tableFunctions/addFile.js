@@ -108,7 +108,7 @@ var __webpack_exports__ = {};
   \***************************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "addFile": () => (/* binding */ addFile)
+/* harmony export */   "handler": () => (/* binding */ handler)
 /* harmony export */ });
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! source-map-support/register */ "source-map-support/register");
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
@@ -165,7 +165,7 @@ async function addFileToDB(docClient, allMovies) {
 } // eslint-disable-next-line import/prefer-default-export
 
 
-const addFile = async () => {
+const handler = async () => {
   try {
     // Have the propability of not being created yet
     const docClient = new aws_sdk__WEBPACK_IMPORTED_MODULE_1__.DynamoDB.DocumentClient();

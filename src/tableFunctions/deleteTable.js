@@ -31,7 +31,7 @@ async function deleteTableInDB() {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export const deleteTable = async () => {
+export const handler = async () => {
   try {
     const result = await deleteTableInDB();
     return ({

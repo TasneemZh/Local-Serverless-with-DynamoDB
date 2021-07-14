@@ -98,7 +98,7 @@ var __webpack_exports__ = {};
   \******************************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "updateItem": () => (/* binding */ updateItem)
+/* harmony export */   "handler": () => (/* binding */ handler)
 /* harmony export */ });
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! source-map-support/register */ "source-map-support/register");
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
@@ -152,7 +152,7 @@ async function updateItemInDB(event, docClient) {
 } // eslint-disable-next-line import/prefer-default-export
 
 
-const updateItem = async event => {
+const handler = async event => {
   try {
     const docClient = new aws_sdk__WEBPACK_IMPORTED_MODULE_1__.DynamoDB.DocumentClient();
     const result = await updateItemInDB(event, docClient);

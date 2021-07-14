@@ -42,7 +42,7 @@ async function updateItemInDB(event, docClient) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export const updateItem = async (event) => {
+export const handler = async (event) => {
   try {
     const docClient = new DynamoDB.DocumentClient();
     const result = await updateItemInDB(event, docClient);

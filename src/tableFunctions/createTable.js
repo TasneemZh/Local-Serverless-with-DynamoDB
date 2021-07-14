@@ -42,7 +42,7 @@ async function createTableInDB(dynamoDB) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export const createTable = async () => {
+export const handler = async () => {
   try {
     const dynamoDB = new DynamoDB();
     const result = await createTableInDB(dynamoDB);

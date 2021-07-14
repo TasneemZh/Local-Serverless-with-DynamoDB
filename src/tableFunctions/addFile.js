@@ -44,7 +44,7 @@ async function addFileToDB(docClient, allMovies) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export const addFile = async () => {
+export const handler = async () => {
   try {
     // Have the propability of not being created yet
     const docClient = new DynamoDB.DocumentClient();

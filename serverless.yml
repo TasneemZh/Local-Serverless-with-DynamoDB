@@ -28,7 +28,7 @@ functions:
         Action:
           - resource:action
         Resource: '*'
-    handler: src/helloWorld.helloWorld
+    handler: src/helloWorld.handler
     
   createTable:
     events:
@@ -42,7 +42,7 @@ functions:
         Action:
           - resource:action
         Resource: '*'
-    handler: src/tableFunctions/createTable.createTable
+    handler: src/tableFunctions/createTable.handler
 
   addFile:
     events:
@@ -56,7 +56,7 @@ functions:
         Action:
           - resource:action
         Resource: '*'
-    handler: src/tableFunctions/addFile.addFile
+    handler: src/tableFunctions/addFile.handler
     
   addUserInput:
     events:
@@ -70,7 +70,7 @@ functions:
         Action:
           - resource:action
         Resource: '*'
-    handler: src/tableFunctions/addUserInput.addUserInput
+    handler: src/tableFunctions/addUserInput.handler
 
   updateItem:
     events:
@@ -84,7 +84,7 @@ functions:
         Action:
           - resource:action
         Resource: '*'
-    handler: src/tableFunctions/updateItem.updateItem
+    handler: src/tableFunctions/updateItem.handler
 
   deleteTable:
     events:
@@ -98,7 +98,7 @@ functions:
         Action:
           - resource:action
         Resource: '*'
-    handler: src/tableFunctions/deleteTable.deleteTable
+    handler: src/tableFunctions/deleteTable.handler
 
 package:
   individually: true
