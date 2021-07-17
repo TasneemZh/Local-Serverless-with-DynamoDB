@@ -145,7 +145,7 @@ async function updateItemInDB(event, docClient) {
       year,
       title,
       info
-    } = JSON.parse(event.body); // check the user-input of the key
+    } = JSON.parse(event.body); // check the user-input key object
 
     const keyParams = {
       TableName: 'Movies',
@@ -164,7 +164,7 @@ async function updateItemInDB(event, docClient) {
       } else if (JSON.stringify(data) === '{}') {
         reject(new Error('The keys don\'t match any of the data in the database'));
       }
-    }); // assign the movie of this key with the new info
+    }); // assign the movie of this key object with the new info
 
     const params = {
       TableName: 'Movies',

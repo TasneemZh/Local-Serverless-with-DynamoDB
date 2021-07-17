@@ -5,13 +5,34 @@ awsPermissions();
 
 async function addInputToDB(event, docClient) {
   return new Promise((resolve, reject) => {
-    const body = JSON.parse(event.body);
+    const { year, title, info } = JSON.parse(event.body);
+
+    // check the user-input of the key
+    const keyParams = {
+      TableName: 'Movies',
+      /* the year and title parameters are keys and thus should
+     match one of the movies that are already in the DB */
+      Key: {
+        year,
+        title,
+      },
+    };
+
+    // find a movie with the same key object
+    docClient.get(keyParams, (err, data) => {
+      if (err) {
+        reject(err);
+      } else if (JSON.stringify(data) !== '{}') {
+        reject(new Error('There is a movie with the same keys in the database'));
+      }
+    });
+
     const params = {
       TableName: 'Movies',
       Item: {
-        year: body.year, // Movie year of production - of N type (Integer/Number)
-        title: body.title, // Movie name - of S type (String)
-        info: body.info, // An object of any information - of {} type (Object)
+        year, // Movie year of production - of N type (Integer/Number)
+        title, // Movie name - of S type (String)
+        info, // An object of any information - of {} type (Object)
       },
     };
 

@@ -8,7 +8,7 @@ async function updateItemInDB(event, docClient) {
     // take user-input from the body
     const { year, title, info } = JSON.parse(event.body);
 
-    // check the user-input of the key
+    // check the user-input key object
     const keyParams = {
       TableName: 'Movies',
       /* the year and title parameters are keys and thus should
@@ -28,7 +28,7 @@ async function updateItemInDB(event, docClient) {
       }
     });
 
-    // assign the movie of this key with the new info
+    // assign the movie of this key object with the new info
     const params = {
       TableName: 'Movies',
       Key: {
