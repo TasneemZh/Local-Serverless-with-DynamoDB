@@ -12,13 +12,13 @@ module.exports = require("aws-sdk");
 
 /***/ }),
 
-/***/ "fs":
-/*!*********************!*\
-  !*** external "fs" ***!
-  \*********************/
+/***/ "fs/promises":
+/*!******************************!*\
+  !*** external "fs/promises" ***!
+  \******************************/
 /***/ ((module) => {
 
-module.exports = require("fs");
+module.exports = require("fs/promises");
 
 /***/ }),
 
@@ -114,8 +114,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! aws-sdk */ "aws-sdk");
 /* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(aws_sdk__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! fs */ "fs");
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(fs__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var fs_promises__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! fs/promises */ "fs/promises");
+/* harmony import */ var fs_promises__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(fs_promises__WEBPACK_IMPORTED_MODULE_2__);
 
 
  // Lambda functions need aws permissions in order to use the database.
@@ -169,8 +169,9 @@ const handler = async () => {
   try {
     // Have the propability of not being created yet
     const docClient = new aws_sdk__WEBPACK_IMPORTED_MODULE_1__.DynamoDB.DocumentClient();
-    const allMovies = JSON.parse((0,fs__WEBPACK_IMPORTED_MODULE_2__.readFileSync)('./src/data/moviedata.json'), 'utf8');
-    const result = addFileToDB(docClient, allMovies);
+    const moviesFile = await (0,fs_promises__WEBPACK_IMPORTED_MODULE_2__.readFile)('./src/data/moviedata.json', 'utf-8');
+    const allMovies = JSON.parse(moviesFile);
+    const result = await addFileToDB(docClient, allMovies);
     return {
       statusCode: 200,
       body: JSON.stringify({

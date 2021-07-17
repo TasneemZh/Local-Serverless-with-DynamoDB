@@ -1,5 +1,5 @@
 import { config, DynamoDB } from 'aws-sdk';
-import { readFileSync } from 'fs';
+import { readFile } from 'fs/promises';
 
 // Lambda functions need aws permissions in order to use the database.
 config.update({
@@ -48,8 +48,9 @@ export const handler = async () => {
   try {
     // Have the propability of not being created yet
     const docClient = new DynamoDB.DocumentClient();
-    const allMovies = JSON.parse(readFileSync('./src/data/moviedata.json'), 'utf8');
-    const result = addFileToDB(docClient, allMovies);
+    const moviesFile = await readFile('./src/data/moviedata.json', 'utf-8');
+    const allMovies = JSON.parse(moviesFile);
+    const result = await addFileToDB(docClient, allMovies);
     return ({
       statusCode: 200,
       body: JSON.stringify({
