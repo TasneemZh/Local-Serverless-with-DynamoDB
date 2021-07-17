@@ -5,13 +5,14 @@ awsPermissions();
 
 async function addInputToDB(event, docClient) {
   return new Promise((resolve, reject) => {
+    // take user-input from the body
     const { year, title, info } = JSON.parse(event.body);
 
-    // check the user-input of the key
+    // check the user-input key object
     const keyParams = {
       TableName: 'Movies',
       /* the year and title parameters are keys and thus should
-     match one of the movies that are already in the DB */
+         match one of the movies that are already in the DB */
       Key: {
         year,
         title,
@@ -30,13 +31,13 @@ async function addInputToDB(event, docClient) {
     const params = {
       TableName: 'Movies',
       Item: {
-        year, // Movie year of production - of N type (Integer/Number)
-        title, // Movie name - of S type (String)
-        info, // An object of any information - of {} type (Object)
+        year, // movie year of production - of N type (Integer/Number)
+        title, // movie name - of S type (String)
+        info, // an object of any information - of {} type (Object)
       },
     };
 
-    // Add movie parameters to the table including the year, title, and info
+    // add movie parameters to the table including the year, title, and info
     docClient.put(params, (err) => {
       if (err) {
         reject(err);

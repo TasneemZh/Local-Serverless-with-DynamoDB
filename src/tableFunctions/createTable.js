@@ -7,17 +7,19 @@ async function createTableInDB(dynamoDB) {
   return new Promise((resolve, reject) => {
     const params = {
       TableName: 'Movies',
+      /* both year and title are keys for any movie object in the DB. That
+         means changing at least one of the keys creates a new movie object */
       KeySchema: [
-        { AttributeName: 'year', KeyType: 'HASH' }, // Partition key
-        { AttributeName: 'title', KeyType: 'RANGE' }, // Sort key
+        { AttributeName: 'year', KeyType: 'HASH' }, // partition key
+        { AttributeName: 'title', KeyType: 'RANGE' }, // sort key
       ],
       AttributeDefinitions: [
-        { AttributeName: 'year', AttributeType: 'N' }, // Integer (Number) type
-        { AttributeName: 'title', AttributeType: 'S' }, // String type
+        { AttributeName: 'year', AttributeType: 'N' }, // integer (number) type
+        { AttributeName: 'title', AttributeType: 'S' }, // string type
       ],
       ProvisionedThroughput: {
-        ReadCapacityUnits: 10, // Number of accesses for reading per second
-        WriteCapacityUnits: 10, // Number of accesses for writing per second
+        ReadCapacityUnits: 10, // number of accesses for reading per second
+        WriteCapacityUnits: 10, // number of accesses for writing per second
       },
     };
 
@@ -34,7 +36,6 @@ async function createTableInDB(dynamoDB) {
 // eslint-disable-next-line import/prefer-default-export
 export const handler = async () => {
   try {
-    // Lambda functions need aws permissions in order to use the database.
     const dynamoDB = new DynamoDB();
     const result = await createTableInDB(dynamoDB);
     return ({
