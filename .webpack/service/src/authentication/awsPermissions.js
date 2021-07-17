@@ -2,34 +2,6 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/authentication/awsPermissions.js":
-/*!**********************************************!*\
-  !*** ./src/authentication/awsPermissions.js ***!
-  \**********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! source-map-support/register */ "source-map-support/register");
-/* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! aws-sdk */ "aws-sdk");
-/* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(aws_sdk__WEBPACK_IMPORTED_MODULE_1__);
-
- // This is the security token that is needed for Lambda functions to perform operations on the DB
-
-const awsPermissions = async () => aws_sdk__WEBPACK_IMPORTED_MODULE_1__.config.update({
-  region: 'us-east-1',
-  accessKeyId: '1234',
-  secretAccessKey: '5678',
-  endpoint: 'http://localhost:8000'
-});
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (awsPermissions);
-
-/***/ }),
-
 /***/ "aws-sdk":
 /*!**************************!*\
   !*** external "aws-sdk" ***!
@@ -121,65 +93,28 @@ module.exports = require("source-map-support/register");
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-/*!*******************************************!*\
-  !*** ./src/tableFunctions/deleteTable.js ***!
-  \*******************************************/
+/*!**********************************************!*\
+  !*** ./src/authentication/awsPermissions.js ***!
+  \**********************************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "handler": () => (/* binding */ handler)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! source-map-support/register */ "source-map-support/register");
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! aws-sdk */ "aws-sdk");
 /* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(aws_sdk__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _authentication_awsPermissions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../authentication/awsPermissions */ "./src/authentication/awsPermissions.js");
 
+ // This is the security token that is needed for Lambda functions to perform operations on the DB
 
+const awsPermissions = async () => aws_sdk__WEBPACK_IMPORTED_MODULE_1__.config.update({
+  region: 'us-east-1',
+  accessKeyId: '1234',
+  secretAccessKey: '5678',
+  endpoint: 'http://localhost:8000'
+});
 
-(0,_authentication_awsPermissions__WEBPACK_IMPORTED_MODULE_2__.default)();
-
-async function deleteTableInDB() {
-  return new Promise(res => {
-    const dynamodb = new aws_sdk__WEBPACK_IMPORTED_MODULE_1__.DynamoDB();
-    const params = {
-      TableName: 'Movies'
-    };
-    const promise = new Promise((resolve, reject) => {
-      dynamodb.deleteTable(params, err => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(params);
-        }
-      });
-    });
-    promise.catch(() => {}); // To swallow all errors
-
-    res(promise);
-  });
-} // eslint-disable-next-line import/prefer-default-export
-
-
-const handler = async () => {
-  try {
-    const result = await deleteTableInDB();
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: 'Deleted table successfully. It has the following name:-',
-        input: await result
-      }, null, 2)
-    };
-  } catch (err) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: 'Couldn\'t delete the table for the following reason:-',
-        input: err.message
-      }, null, 2)
-    };
-  }
-};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (awsPermissions);
 })();
 
 var __webpack_export_target__ = exports;

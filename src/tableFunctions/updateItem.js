@@ -1,12 +1,7 @@
-import { config, DynamoDB } from 'aws-sdk';
+import { DynamoDB } from 'aws-sdk';
+import awsPermissions from '../authentication/awsPermissions';
 
-// Lambda functions need aws permissions in order to use the database.
-config.update({
-  region: 'us-east-1',
-  accessKeyId: '1234',
-  secretAccessKey: '5678',
-  endpoint: 'http://localhost:8000',
-});
+awsPermissions();
 
 async function updateItemInDB(event, docClient) {
   return new Promise((res) => {

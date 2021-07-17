@@ -1,12 +1,7 @@
-import { config, DynamoDB } from 'aws-sdk';
+import { DynamoDB } from 'aws-sdk';
+import awsPermissions from '../authentication/awsPermissions';
 
-// Lambda functions need aws permissions in order to use the database.
-config.update({
-  region: 'us-east-1',
-  accessKeyId: '1234',
-  secretAccessKey: '5678',
-  endpoint: 'http://localhost:8000',
-});
+awsPermissions();
 
 async function createTableInDB(dynamoDB) {
   return new Promise((res) => {
@@ -44,6 +39,7 @@ async function createTableInDB(dynamoDB) {
 // eslint-disable-next-line import/prefer-default-export
 export const handler = async () => {
   try {
+    // Lambda functions need aws permissions in order to use the database.
     const dynamoDB = new DynamoDB();
     const result = await createTableInDB(dynamoDB);
     return ({

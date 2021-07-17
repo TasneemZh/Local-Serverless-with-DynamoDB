@@ -2,6 +2,34 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/authentication/awsPermissions.js":
+/*!**********************************************!*\
+  !*** ./src/authentication/awsPermissions.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! source-map-support/register */ "source-map-support/register");
+/* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! aws-sdk */ "aws-sdk");
+/* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(aws_sdk__WEBPACK_IMPORTED_MODULE_1__);
+
+ // This is the security token that is needed for Lambda functions to perform operations on the DB
+
+const awsPermissions = async () => aws_sdk__WEBPACK_IMPORTED_MODULE_1__.config.update({
+  region: 'us-east-1',
+  accessKeyId: '1234',
+  secretAccessKey: '5678',
+  endpoint: 'http://localhost:8000'
+});
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (awsPermissions);
+
+/***/ }),
+
 /***/ "aws-sdk":
 /*!**************************!*\
   !*** external "aws-sdk" ***!
@@ -104,15 +132,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! aws-sdk */ "aws-sdk");
 /* harmony import */ var aws_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(aws_sdk__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _authentication_awsPermissions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../authentication/awsPermissions */ "./src/authentication/awsPermissions.js");
 
- // Lambda functions need aws permissions in order to use the database.
 
-aws_sdk__WEBPACK_IMPORTED_MODULE_1__.config.update({
-  region: 'us-east-1',
-  accessKeyId: '1234',
-  secretAccessKey: '5678',
-  endpoint: 'http://localhost:8000'
-});
+
+(0,_authentication_awsPermissions__WEBPACK_IMPORTED_MODULE_2__.default)();
 
 async function createTableInDB(dynamoDB) {
   return new Promise(res => {
@@ -161,6 +185,7 @@ async function createTableInDB(dynamoDB) {
 
 const handler = async () => {
   try {
+    // Lambda functions need aws permissions in order to use the database.
     const dynamoDB = new aws_sdk__WEBPACK_IMPORTED_MODULE_1__.DynamoDB();
     const result = await createTableInDB(dynamoDB);
     return {
