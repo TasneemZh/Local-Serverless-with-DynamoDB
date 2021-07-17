@@ -139,7 +139,7 @@ __webpack_require__.r(__webpack_exports__);
 (0,_authentication_awsPermissions__WEBPACK_IMPORTED_MODULE_2__.default)();
 
 async function createTableInDB(dynamoDB) {
-  return new Promise(res => {
+  return new Promise((resolve, reject) => {
     const params = {
       TableName: 'Movies',
       KeySchema: [{
@@ -167,18 +167,13 @@ async function createTableInDB(dynamoDB) {
 
       }
     };
-    const promise = new Promise((resolve, reject) => {
-      dynamoDB.createTable(params, err => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(params);
-        }
-      });
+    dynamoDB.createTable(params, err => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(params.TableName);
+      }
     });
-    promise.catch(() => {}); // To swallow all errors
-
-    res(promise);
   });
 } // eslint-disable-next-line import/prefer-default-export
 
@@ -191,7 +186,7 @@ const handler = async () => {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: 'Created table successfully with the following paramaters:-',
+        message: 'Created successfully the table with the following name:-',
         input: await result
       }, null, 2)
     };
@@ -199,7 +194,7 @@ const handler = async () => {
     return {
       statusCode: 400,
       body: JSON.stringify({
-        message: 'Couldn\'t create table for the following reason:-',
+        message: 'Error! Couldn\'t create table for the following reason:-',
         input: err.message
       }, null, 2)
     };

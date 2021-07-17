@@ -3,36 +3,31 @@ import awsPermissions from '../authentication/awsPermissions';
 
 awsPermissions();
 
-async function deleteTableInDB() {
-  return new Promise((res) => {
-    const dynamodb = new DynamoDB();
+async function deleteTableInDB(dynamodb) {
+  return new Promise((resolve, reject) => {
     const params = {
       TableName: 'Movies',
     };
 
-    const promise = new Promise((resolve, reject) => {
-      dynamodb.deleteTable(params, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(params);
-        }
-      });
+    dynamodb.deleteTable(params, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(params.TableName);
+      }
     });
-
-    promise.catch(() => {}); // To swallow all errors
-    res(promise);
   });
 }
 
 // eslint-disable-next-line import/prefer-default-export
 export const handler = async () => {
   try {
-    const result = await deleteTableInDB();
+    const dynamodb = new DynamoDB();
+    const result = await deleteTableInDB(dynamodb);
     return ({
       statusCode: 200,
       body: JSON.stringify({
-        message: 'Deleted table successfully. It has the following name:-',
+        message: 'Deleted successfully the table with the following name:-',
         input: await result,
       },
       null,

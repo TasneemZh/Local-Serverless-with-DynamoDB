@@ -4,7 +4,7 @@ import awsPermissions from '../authentication/awsPermissions';
 awsPermissions();
 
 async function createTableInDB(dynamoDB) {
-  return new Promise((res) => {
+  return new Promise((resolve, reject) => {
     const params = {
       TableName: 'Movies',
       KeySchema: [
@@ -21,18 +21,13 @@ async function createTableInDB(dynamoDB) {
       },
     };
 
-    const promise = new Promise((resolve, reject) => {
-      dynamoDB.createTable(params, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(params);
-        }
-      });
+    dynamoDB.createTable(params, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(params.TableName);
+      }
     });
-
-    promise.catch(() => {}); // To swallow all errors
-    res(promise);
   });
 }
 
@@ -45,7 +40,7 @@ export const handler = async () => {
     return ({
       statusCode: 200,
       body: JSON.stringify({
-        message: 'Created table successfully with the following paramaters:-',
+        message: 'Created successfully the table with the following name:-',
         input: await result,
       },
       null,
@@ -55,7 +50,7 @@ export const handler = async () => {
     return ({
       statusCode: 400,
       body: JSON.stringify({
-        message: 'Couldn\'t create table for the following reason:-',
+        message: 'Error! Couldn\'t create table for the following reason:-',
         input: err.message,
       },
       null,

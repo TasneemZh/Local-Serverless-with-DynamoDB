@@ -4,12 +4,33 @@ import awsPermissions from '../authentication/awsPermissions';
 awsPermissions();
 
 async function updateItemInDB(event, docClient) {
-  return new Promise((res) => {
+  return new Promise((resolve, reject) => {
+    // take user-input from the body
     const { year, title, info } = JSON.parse(event.body);
+
+    // check the user-input of the key
+    const keyParams = {
+      TableName: 'Movies',
+      /* the year and title parameters are keys and thus should
+         match one of the movies that are already in the DB */
+      Key: {
+        year,
+        title,
+      },
+    };
+
+    // find a movie with the same key object
+    docClient.get(keyParams, (err, data) => {
+      if (err) {
+        reject(err);
+      } else if (JSON.stringify(data) === '{}') {
+        reject(new Error('The keys don\'t match any of the data in the database'));
+      }
+    });
+
+    // assign the movie of this key with the new info
     const params = {
       TableName: 'Movies',
-      /* The year and title parameters are keys and thus should
-        match one of the movies that are already in the DB */
       Key: {
         year,
         title,
@@ -21,18 +42,21 @@ async function updateItemInDB(event, docClient) {
       ReturnValues: 'UPDATED_NEW',
     };
 
-    const promise = new Promise((resolve, reject) => {
-      docClient.update(params, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(params);
-        }
-      });
+    // update the movie
+    docClient.update(params, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({
+          TableName: 'Movies',
+          Key: {
+            year,
+            title,
+          },
+          info,
+        });
+      }
     });
-
-    promise.catch(() => {}); // To swallow all errors
-    res(promise);
   });
 }
 
@@ -51,11 +75,10 @@ export const handler = async (event) => {
       2),
     });
   } catch (err) {
-    console.log(err);
     return ({
       statusCode: 400,
       body: JSON.stringify({
-        message: 'The movie couldn\'t be updated for the following reason:-',
+        message: 'Error! The movie couldn\'t be updated for the following reason:-',
         input: err.message,
       },
       null,

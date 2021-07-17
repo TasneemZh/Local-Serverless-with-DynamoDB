@@ -139,7 +139,7 @@ __webpack_require__.r(__webpack_exports__);
 (0,_authentication_awsPermissions__WEBPACK_IMPORTED_MODULE_2__.default)();
 
 async function addInputToDB(event, docClient) {
-  return new Promise(res => {
+  return new Promise((resolve, reject) => {
     const body = JSON.parse(event.body);
     const params = {
       TableName: 'Movies',
@@ -153,18 +153,13 @@ async function addInputToDB(event, docClient) {
       }
     }; // Add movie parameters to the table including the year, title, and info
 
-    const promise = new Promise((resolve, reject) => {
-      docClient.put(params, err => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(params);
-        }
-      });
+    docClient.put(params, err => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(params);
+      }
     });
-    promise.catch(() => {}); // To swallow all errors
-
-    res(promise);
   });
 } // eslint-disable-next-line import/prefer-default-export
 
@@ -176,7 +171,7 @@ const handler = async event => {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: 'A new movie based on your inputs has been added:-',
+        message: 'A new movie based on your inputs has been added as follows:-',
         input: await result
       }, null, 2)
     };

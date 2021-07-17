@@ -138,35 +138,30 @@ __webpack_require__.r(__webpack_exports__);
 
 (0,_authentication_awsPermissions__WEBPACK_IMPORTED_MODULE_2__.default)();
 
-async function deleteTableInDB() {
-  return new Promise(res => {
-    const dynamodb = new aws_sdk__WEBPACK_IMPORTED_MODULE_1__.DynamoDB();
+async function deleteTableInDB(dynamodb) {
+  return new Promise((resolve, reject) => {
     const params = {
       TableName: 'Movies'
     };
-    const promise = new Promise((resolve, reject) => {
-      dynamodb.deleteTable(params, err => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(params);
-        }
-      });
+    dynamodb.deleteTable(params, err => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(params.TableName);
+      }
     });
-    promise.catch(() => {}); // To swallow all errors
-
-    res(promise);
   });
 } // eslint-disable-next-line import/prefer-default-export
 
 
 const handler = async () => {
   try {
-    const result = await deleteTableInDB();
+    const dynamodb = new aws_sdk__WEBPACK_IMPORTED_MODULE_1__.DynamoDB();
+    const result = await deleteTableInDB(dynamodb);
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: 'Deleted table successfully. It has the following name:-',
+        message: 'Deleted successfully the table with the following name:-',
         input: await result
       }, null, 2)
     };

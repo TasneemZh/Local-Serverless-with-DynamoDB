@@ -2,10 +2,10 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/mochaFunctions/mochaExample.js":
-/*!********************************************!*\
-  !*** ./src/mochaFunctions/mochaExample.js ***!
-  \********************************************/
+/***/ "./src/mochaFunctions/exampleFunction.js":
+/*!***********************************************!*\
+  !*** ./src/mochaFunctions/exampleFunction.js ***!
+  \***********************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -14,15 +14,13 @@ __webpack_require__.r(__webpack_exports__);
 /* module decorator */ module = __webpack_require__.hmd(module);
 
 
-module.exports.mochaExample = async event => {
-  const bodyObj = JSON.parse(event.body); // Should conosle.log the parameter inside the test function if everything is configured correctly
 
-  console.log(bodyObj.parameter);
+
+module.exports.exampleFunction = async (event, context) => {
   return {
     statusCode: 200,
     body: JSON.stringify({
-      // Nothing will appear through moch command and thus used console.log
-      message: bodyObj.parameter
+      message: 'Success!'
     })
   };
 };
@@ -129,7 +127,7 @@ module.exports = require("source-map-support/register");
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__("./src/mochaFunctions/mochaExample.js");
+/******/ 	var __webpack_exports__ = __webpack_require__("./src/mochaFunctions/exampleFunction.js");
 /******/ 	var __webpack_export_target__ = exports;
 /******/ 	for(var i in __webpack_exports__) __webpack_export_target__[i] = __webpack_exports__[i];
 /******/ 	if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, "__esModule", { value: true });

@@ -13,9 +13,9 @@ provider:
     managed_by: sls
 
 functions:
-  mochaExample:
-    handler: src/mochaFunctions/mochaExample.mochaExample # Has been built through serverless-mocha-plugin by 'sls create function' command
-  
+  exampleFunction:
+    handler: src/mochaFunctions/exampleFunction.exampleFunction
+
   helloWorld:
     events:
       - http:

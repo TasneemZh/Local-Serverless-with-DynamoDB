@@ -94,11 +94,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var source_map_support_register__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(source_map_support_register__WEBPACK_IMPORTED_MODULE_0__);
 
 // eslint-disable-next-line import/prefer-default-export
-const handler = async event => ({
+const handler = async () => ({
   statusCode: 200,
   body: JSON.stringify({
-    message: 'Hello World!',
-    input: event
+    message: 'Hello World!'
   }, null, 2)
 });
 })();

@@ -5,7 +5,7 @@ import awsPermissions from '../authentication/awsPermissions';
 awsPermissions();
 
 async function addFileToDB(docClient, allMovies) {
-  return new Promise((res) => {
+  return new Promise((resolve, reject) => {
     const params = [];
     const movieTitles = [];
     allMovies.forEach((movie) => {
@@ -20,21 +20,16 @@ async function addFileToDB(docClient, allMovies) {
     });
 
     // Add movie parameters to the table including the year, title, and info
-    const promise = new Promise((resolve, reject) => {
-      for (let i = 0; i < params.length; i += 1) {
-        movieTitles.push(params[i].Item.title);
-        docClient.put(params[i], (err) => {
-          if (err) {
-            reject(err);
-          } else if (i === params.length - 1) { // Last item
-            resolve(movieTitles);
-          }
-        });
-      }
-    });
-
-    promise.catch(() => {}); // To swallow all errors
-    res(promise); // promise.Item.title
+    for (let i = 0; i < params.length; i += 1) {
+      movieTitles.push(params[i].Item.title);
+      docClient.put(params[i], (err) => {
+        if (err) {
+          reject(err);
+        } else if (i === params.length - 1) { // Last item
+          resolve(movieTitles);
+        }
+      });
+    }
   });
 }
 
@@ -49,7 +44,7 @@ export const handler = async () => {
     return ({
       statusCode: 200,
       body: JSON.stringify({
-        message: 'New Movies have been added, and they have the following titles:-',
+        message: 'New Movies have been added with the following titles:-',
         input: await result,
       },
       null,
