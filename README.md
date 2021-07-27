@@ -82,7 +82,7 @@ Add the DB functions to _serverless.yml_ in the same way as in the second part.
 
 * _serverless.yml_ is very sensitive to indents so take extra care to them there.
 
-* _tableFunctions_ are written with the ES6 module while _mochaFunctions_ are written with the CommonJS module. Both of them don't need to apply explicitly the global strict mode directive by writing at the top of js files _"use strict";_ since they already use strict mode in their modules.
+* _tableFunctions_ are written with the ES6 module while _mochaFunctions_ are written with the CommonJS module. Both of them don't need to apply explicitly the global strict mode directive by writing at the top of js files _'use strict';_ since they already use strict mode in their modules.
 
 -------------------------------------------------
 
