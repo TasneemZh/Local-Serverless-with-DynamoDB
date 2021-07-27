@@ -3,23 +3,18 @@ import awsPermissions from '../authentication/awsPermissions';
 
 awsPermissions();
 
-async function updateItemInDB(event, docClient) {
+function updateItemInDB(event, docClient) {
   return new Promise((resolve, reject) => {
-    // take user-input from the body
     const { year, title, info } = JSON.parse(event.body);
 
-    // check the user-input key object
     const keyParams = {
       TableName: 'Movies',
-      /* the year and title parameters are keys and thus should
-         match one of the movies that are already in the DB */
       Key: {
         year,
         title,
       },
     };
 
-    // find a movie with the same key object
     docClient.get(keyParams, (err, data) => {
       if (err) {
         reject(err);
@@ -28,7 +23,6 @@ async function updateItemInDB(event, docClient) {
       }
     });
 
-    // assign the movie of this key object with the new info
     const params = {
       TableName: 'Movies',
       Key: {
@@ -42,7 +36,6 @@ async function updateItemInDB(event, docClient) {
       ReturnValues: 'UPDATED_NEW',
     };
 
-    // update the movie
     docClient.update(params, (err) => {
       if (err) {
         reject(err);
@@ -69,7 +62,7 @@ export const handler = async (event) => {
       statusCode: 200,
       body: JSON.stringify({
         message: 'The movie with the selected keys has been updated as follows:-',
-        input: await result,
+        input: result,
       },
       null,
       2),

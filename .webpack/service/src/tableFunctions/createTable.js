@@ -138,33 +138,27 @@ __webpack_require__.r(__webpack_exports__);
 
 (0,_authentication_awsPermissions__WEBPACK_IMPORTED_MODULE_2__.default)();
 
-async function createTableInDB(dynamoDB) {
+function createTableInDB(dynamoDB) {
   return new Promise((resolve, reject) => {
     const params = {
       TableName: 'Movies',
       KeySchema: [{
         AttributeName: 'year',
         KeyType: 'HASH'
-      }, // Partition key
-      {
+      }, {
         AttributeName: 'title',
         KeyType: 'RANGE'
-      } // Sort key
-      ],
+      }],
       AttributeDefinitions: [{
         AttributeName: 'year',
         AttributeType: 'N'
-      }, // Integer (Number) type
-      {
+      }, {
         AttributeName: 'title',
         AttributeType: 'S'
-      } // String type
-      ],
+      }],
       ProvisionedThroughput: {
         ReadCapacityUnits: 10,
-        // Number of accesses for reading per second
-        WriteCapacityUnits: 10 // Number of accesses for writing per second
-
+        WriteCapacityUnits: 10
       }
     };
     dynamoDB.createTable(params, err => {
@@ -180,14 +174,13 @@ async function createTableInDB(dynamoDB) {
 
 const handler = async () => {
   try {
-    // Lambda functions need aws permissions in order to use the database.
     const dynamoDB = new aws_sdk__WEBPACK_IMPORTED_MODULE_1__.DynamoDB();
     const result = await createTableInDB(dynamoDB);
     return {
       statusCode: 200,
       body: JSON.stringify({
         message: 'Created successfully the table with the following name:-',
-        input: await result
+        input: result
       }, null, 2)
     };
   } catch (err) {

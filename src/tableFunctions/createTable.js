@@ -3,23 +3,21 @@ import awsPermissions from '../authentication/awsPermissions';
 
 awsPermissions();
 
-async function createTableInDB(dynamoDB) {
+function createTableInDB(dynamoDB) {
   return new Promise((resolve, reject) => {
     const params = {
       TableName: 'Movies',
-      /* both year and title are keys for any movie object in the DB. That
-         means changing at least one of the keys creates a new movie object */
       KeySchema: [
-        { AttributeName: 'year', KeyType: 'HASH' }, // partition key
-        { AttributeName: 'title', KeyType: 'RANGE' }, // sort key
+        { AttributeName: 'year', KeyType: 'HASH' },
+        { AttributeName: 'title', KeyType: 'RANGE' },
       ],
       AttributeDefinitions: [
-        { AttributeName: 'year', AttributeType: 'N' }, // integer (number) type
-        { AttributeName: 'title', AttributeType: 'S' }, // string type
+        { AttributeName: 'year', AttributeType: 'N' },
+        { AttributeName: 'title', AttributeType: 'S' },
       ],
       ProvisionedThroughput: {
-        ReadCapacityUnits: 10, // number of accesses for reading per second
-        WriteCapacityUnits: 10, // number of accesses for writing per second
+        ReadCapacityUnits: 10,
+        WriteCapacityUnits: 10,
       },
     };
 
@@ -42,7 +40,7 @@ export const handler = async () => {
       statusCode: 200,
       body: JSON.stringify({
         message: 'Created successfully the table with the following name:-',
-        input: await result,
+        input: result,
       },
       null,
       2),

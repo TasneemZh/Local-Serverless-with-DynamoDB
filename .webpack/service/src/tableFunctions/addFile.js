@@ -151,7 +151,7 @@ __webpack_require__.r(__webpack_exports__);
 
 (0,_authentication_awsPermissions__WEBPACK_IMPORTED_MODULE_3__.default)();
 
-async function addFileToDB(docClient, allMovies) {
+function addFileToDB(docClient, allMovies) {
   return new Promise((resolve, reject) => {
     const params = [];
     const movieTitles = [];
@@ -160,14 +160,11 @@ async function addFileToDB(docClient, allMovies) {
         TableName: 'Movies',
         Item: {
           year: movie.year,
-          // Movie year of production
           title: movie.title,
-          // Movie name
-          info: movie.info // An object of any information
-
+          info: movie.info
         }
       });
-    }); // Add movie parameters to the table including the year, title, and info
+    });
 
     for (let i = 0; i < params.length; i += 1) {
       movieTitles.push(params[i].Item.title);
@@ -175,7 +172,6 @@ async function addFileToDB(docClient, allMovies) {
         if (err) {
           reject(err);
         } else if (i === params.length - 1) {
-          // Last item
           resolve(movieTitles);
         }
       });
@@ -186,7 +182,6 @@ async function addFileToDB(docClient, allMovies) {
 
 const handler = async () => {
   try {
-    // Have the propability of not being created yet
     const docClient = new aws_sdk__WEBPACK_IMPORTED_MODULE_1__.DynamoDB.DocumentClient();
     const moviesFile = await (0,fs_promises__WEBPACK_IMPORTED_MODULE_2__.readFile)('./src/data/moviedata.json', 'utf-8');
     const allMovies = JSON.parse(moviesFile);
@@ -195,7 +190,7 @@ const handler = async () => {
       statusCode: 200,
       body: JSON.stringify({
         message: 'New Movies have been added with the following titles:-',
-        input: await result
+        input: result
       }, null, 2)
     };
   } catch (err) {

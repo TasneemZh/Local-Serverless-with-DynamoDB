@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports.exampleFunction = async (event, context) => {
+module.exports.exampleFunction = async () => {
   return {
     statusCode: 200,
     body: JSON.stringify({

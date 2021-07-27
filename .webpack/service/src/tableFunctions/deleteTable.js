@@ -138,7 +138,7 @@ __webpack_require__.r(__webpack_exports__);
 
 (0,_authentication_awsPermissions__WEBPACK_IMPORTED_MODULE_2__.default)();
 
-async function deleteTableInDB(dynamodb) {
+function deleteTableInDB(dynamodb) {
   return new Promise((resolve, reject) => {
     const params = {
       TableName: 'Movies'
@@ -162,7 +162,7 @@ const handler = async () => {
       statusCode: 200,
       body: JSON.stringify({
         message: 'Deleted successfully the table with the following name:-',
-        input: await result
+        input: result
       }, null, 2)
     };
   } catch (err) {

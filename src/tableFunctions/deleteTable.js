@@ -3,7 +3,7 @@ import awsPermissions from '../authentication/awsPermissions';
 
 awsPermissions();
 
-async function deleteTableInDB(dynamodb) {
+function deleteTableInDB(dynamodb) {
   return new Promise((resolve, reject) => {
     const params = {
       TableName: 'Movies',
@@ -28,7 +28,7 @@ export const handler = async () => {
       statusCode: 200,
       body: JSON.stringify({
         message: 'Deleted successfully the table with the following name:-',
-        input: await result,
+        input: result,
       },
       null,
       2),

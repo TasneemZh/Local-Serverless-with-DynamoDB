@@ -138,34 +138,27 @@ __webpack_require__.r(__webpack_exports__);
 
 (0,_authentication_awsPermissions__WEBPACK_IMPORTED_MODULE_2__.default)();
 
-async function updateItemInDB(event, docClient) {
+function updateItemInDB(event, docClient) {
   return new Promise((resolve, reject) => {
-    // take user-input from the body
     const {
       year,
       title,
       info
-    } = JSON.parse(event.body); // check the user-input key object
-
+    } = JSON.parse(event.body);
     const keyParams = {
       TableName: 'Movies',
-
-      /* the year and title parameters are keys and thus should
-         match one of the movies that are already in the DB */
       Key: {
         year,
         title
       }
-    }; // find a movie with the same key object
-
+    };
     docClient.get(keyParams, (err, data) => {
       if (err) {
         reject(err);
       } else if (JSON.stringify(data) === '{}') {
         reject(new Error('The keys don\'t match any of the data in the database'));
       }
-    }); // assign the movie of this key object with the new info
-
+    });
     const params = {
       TableName: 'Movies',
       Key: {
@@ -177,8 +170,7 @@ async function updateItemInDB(event, docClient) {
         ':info': info
       },
       ReturnValues: 'UPDATED_NEW'
-    }; // update the movie
-
+    };
     docClient.update(params, err => {
       if (err) {
         reject(err);
@@ -205,7 +197,7 @@ const handler = async event => {
       statusCode: 200,
       body: JSON.stringify({
         message: 'The movie with the selected keys has been updated as follows:-',
-        input: await result
+        input: result
       }, null, 2)
     };
   } catch (err) {

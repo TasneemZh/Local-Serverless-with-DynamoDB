@@ -16,7 +16,7 @@ Mocha Functions: This type of functions has an advantage of getting created by a
 
 Determining the _test_ path is optional, but in neither way, the test function would be created side to side with the user mocha function.
 
-Running this kind is done by running the test function which would have the same name as the user function but is better changed to another name to avoid confusion. (Check the project _mochaFunctions_ folder and _test_ folder).
+Running this kind is done by running the test function which would have the same name as the user function but is better changed to another name to avoid confusion. (Check the project _mochaFunctions_ folder and _test_ folder)
 
 ### Second Part
 
@@ -38,13 +38,13 @@ Add the DB functions to _serverless.yml_ in the same way as in the second part.
 
 # Setting up the Project
 
-1- Clone the project. `git clone https://github.com/TasneemZh/Local-Serverless-with-DynamoDB.git`
+1- Clone the project. `git clone https://github.com/TasneemZh/Local-Serverless-with-DynamoDB.git`.
 
-2- Install the NPM devDependencies `npm i -also=dev` and dependencies `npm i`
+2- Install NPM dependencies by `npm i`.
 
-3- Install serverless globally by NPM (ONLY ONCE) `npm i -g serverless`, or locally, if that is not possible.
+3- Install NPM devDependencies by `npm i -also=dev`.
 
-4- Install mocha globally by NPM (ONLY ONCE) `npm i -g mocha​`, or locally, if that is not possible.
+4- Install serverless globally by NPM (ONLY ONCE) `npm i -g serverless`, or locally, if that is not possible.
 
 -------------------------------------------------
 
@@ -54,7 +54,7 @@ Add the DB functions to _serverless.yml_ in the same way as in the second part.
 
 **Mocha:** `mocha src/test/mocahExampleFunction.js` OR `cd src/test` then `mocha mocahExampleFunction.js`
 
-**General:** `sls offline` , [Dev - Main Route](http://localhost:3000/dev) , and Postman if REST is used in the project for best practice
+**General:** `sls offline`, [Dev - Main Route](http://localhost:3000/dev), and Postman if REST is used in the project for best practice
 
 **Dynamodb:** [Shell](http://localhost:8000/shell/)
 
